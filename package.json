@@ -2,12 +2,12 @@
   "author": "Bill Casarin <bill@casarin.ca>",
   "name": "youtube-data",
   "description": "Get YouTube data as JSON",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": {
     "type": "git",
     "url": "git://github.com/jb55/youtube-data.git"
   },
-  "main": "index.coffee",
+  "main": "index.js",
   "engines": {
     "node": ">=0.4.0"
   },
