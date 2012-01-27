@@ -1,0 +1,17 @@
+{
+  "author": "Bill Casarin <bill@casarin.ca>",
+  "name": "youtube-data",
+  "description": "Get YouTube data as JSON",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/jb55/youtube-data.git"
+  },
+  "main": "index.coffee",
+  "engines": {
+    "node": ">=0.4.0"
+  },
+  "dependencies": { "coffee-script": ">=1.1.1", "request": "*" },
+  "devDependencies": {},
+  "optionalDependencies": {}
+}
