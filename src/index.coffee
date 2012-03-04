@@ -1,7 +1,7 @@
 request = require 'request'
 qs = require 'querystring'
 _ = require('underscore')._
-query = require './lib/query'
+query = require './query'
 
 class YoutubeData
   constructor: (opts={}) ->

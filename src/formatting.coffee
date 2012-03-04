@@ -14,3 +14,4 @@ ext = (objs...) ->
 video.entry.simple = (entry) ->
   title: entry.title.$t
   rating: ext entry.gd$rating, entry.yt$rating, entry.yt$statistics
+

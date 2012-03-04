@@ -9,6 +9,7 @@ class Query
 
   constructor: (opts={}) ->
     @qs = opts.qs or {}
+    @opts = {}
     @pagination = {}
 
   results: (r) ->
@@ -55,20 +56,20 @@ class Query
     @qs.author = author
     @
 
-  specificType: (type) ->
-    @type = type
+  type: (type) ->
+    @opts.type = type
     @
 
   videos: (author) ->
-    @specificType("videos")
+    @type("videos")
     @author(author) if author
     @
 
-  @simple: (simple=true) ->
-    @simple = simple
+  simple: (simple=true) ->
+    @opts.simple = simple
     @
 
-  generateQs = ->
+  generateQs: ->
     defaultOpts =
       alt: 'json'
       v: 2
@@ -79,11 +80,12 @@ class Query
 
   run: (cb) ->
     qs_ = qs.stringify @generateQs()
+    { type, simple } = @opts
 
-    unless @type
+    unless type
       return cb "Query type not selected. eg. query.videos('author')"
 
-    url = "http://gdata.youtube.com/feeds/api/#{ @type }?#{ qs_ }"
+    url = "http://gdata.youtube.com/feeds/api/#{ type }?#{ qs_ }"
 
     request url, (err, res, body) ->
       return cb err if err
@@ -92,8 +94,9 @@ class Query
       catch e
         return cb(e)
 
-      if @simple and @type is 'videos'
-        json.feed.entry = _.map fmt.video.entry.simple, json.feed.entry
+      if simple and type is 'videos'
+        json.feed.entry = _.map json.feed.entry, fmt.video.entry.simple
 
       return cb null, json
 
+module.exports = Query
