@@ -1,16 +1,16 @@
-qs = require 'querystring'
-_  = require('underscore')._
-request = require 'request'
-fmt = require './formatting'
+qs               = require 'querystring'
+{ _ }            = require('underscore')
+request          = require 'request'
+fmt              = require './formatting'
+{ EventEmitter } = require 'events'
 
-class Query
+class Query extends EventEmitter
   @new = () ->
     return new Query
 
   constructor: (opts={}) ->
     @qs = opts.qs or {}
     @opts = {}
-    @pagination = {}
 
   results: (r) ->
     maxResults = r
@@ -35,17 +35,17 @@ class Query
     @
 
   page: (page) ->
-    @pagination.page = page
-    @pagination.page = 1 if @p
+    @opts.page = page
+    @opts.page = 1 if @p
     @
 
   pages: (start, end) ->
-    @pagination.start = start
-    @pagination.end = end
+    @opts.start = start
+    @opts.end = end
     @
 
   all: (all=true) ->
-    @pagination.all = all
+    @opts.all = all
     @
 
   startAt: (ind) ->
@@ -69,18 +69,18 @@ class Query
     @opts.simple = simple
     @
 
-  generateQs: ->
+  @generateQs: (qs_) ->
     defaultOpts =
       alt: 'json'
       v: 2
 
-    _.extend defaultOpts, @qs
+    _.extend defaultOpts, qs_
 
     return defaultOpts
 
-  run: (cb) ->
-    qs_ = qs.stringify @generateQs()
-    { type, simple } = @opts
+  @doRequest: (querystring, opts, cb) ->
+    qs_ = qs.stringify Query.generateQs(querystring)
+    { type, simple } = opts
 
     unless type
       return cb "Query type not selected. eg. query.videos('author')"
@@ -98,5 +98,38 @@ class Query
         json.feed.entry = _.map json.feed.entry, fmt.video.entry.simple
 
       return cb null, json
+
+  run: (cb) ->
+
+    if @opts.all
+      entries = []
+      maxLen = @qs["max-length"] = @qs["max-length"] or 50
+      startAt = @qs["start-index"] = @qs["start-index"] or 1
+
+      go = (qs_) =>
+        Query.doRequest qs_, @opts, (err, data) =>
+          return cb err if err
+          @emit 'result', data
+
+          numEntries = data.feed.entry.length
+
+          for entry in data.feed.entry
+            entries.push entry
+
+          # we got less then expected, that must mean there are no more after
+          # this page
+          if numEntries is 0 or (maxLen and numEntries < maxLen)
+            data.feed.entry = entries
+            return cb null, data
+          else
+            qs_["start-index"] = startAt += maxLen
+            go qs_
+
+      go @qs
+    else
+      Query.doRequest @qs, @opts, cb
+
+    @
+
 
 module.exports = Query

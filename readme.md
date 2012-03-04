@@ -8,7 +8,6 @@ Examples
 
 ```coffeescript
 yt = require('youtube-data')
-_ = require('underscore')._
 
 yt.query()
   .videos('monstercatmedia')
