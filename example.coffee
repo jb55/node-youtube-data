@@ -1,4 +1,4 @@
-yt = require('./lib/index').init()
+yt = require('./lib/index')
 _ = require('underscore')._
 
 yt.query()
