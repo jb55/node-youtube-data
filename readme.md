@@ -7,7 +7,7 @@ Examples
 --------
 
 ```coffeescript
-yt = require('youtube-data').init()
+yt = require('youtube-data')
 _ = require('underscore')._
 
 yt.query()
