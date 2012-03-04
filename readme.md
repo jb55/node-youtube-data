@@ -6,23 +6,19 @@ Get data from YouTube as JSON
 Examples
 --------
 
-Direct request
-
 ```coffeescript
 yt = require('youtube-data').init()
+_ = require('underscore')._
 
-yt.channel 'monstercatmedia', (err, data) ->
-  for entry in data.entries
-    console.log entry.title
-    console.log '\t', entry.stats
-    console.log '\t', entry.rating
-```
+yt.query()
+  .videos('monstercatmedia')
+  .results(50)
+  .orderByPublished()
+  .simple()
+  .run (err, data) ->
+    return console.log err if err
 
-Parse the xml directly
-
-```coffeescript
-yt.xml().channel channelXml, (err, data) ->
-  console.log "parsed data" unless err
+    console.log data.feed.entry
 ```
 
 Work in progress
