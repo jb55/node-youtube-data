@@ -60,6 +60,11 @@ class Query extends EventEmitter
     @opts.type = type
     @
 
+  user: (user) ->
+    @type("users")
+    @opts.id = user
+    @
+
   videos: (author) ->
     @type("videos")
     @author(author) if author
@@ -85,7 +90,8 @@ class Query extends EventEmitter
     unless type
       return cb "Query type not selected. eg. query.videos('author')"
 
-    url = "http://gdata.youtube.com/feeds/api/#{ type }?#{ qs_ }"
+    id = if opts.id then "/#{ opts.id }" else ""
+    url = "http://gdata.youtube.com/feeds/api/#{ type }#{ id }?#{ qs_ }"
 
     request url, (err, res, body) ->
       return cb err if err
@@ -118,7 +124,7 @@ class Query extends EventEmitter
 
           # we got less then expected, that must mean there are no more after
           # this page
-          if numEntries is 0 or (maxLen and numEntries < maxLen)
+          if numEntries is 0 or numEntries < maxLen
             data.feed.entry = entries
             return cb null, data
           else
