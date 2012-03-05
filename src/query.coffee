@@ -53,6 +53,7 @@ class Query extends EventEmitter
     @
 
   author: (author) ->
+    return @qs.author unless author
     @qs.author = author
     @
 
@@ -106,6 +107,7 @@ class Query extends EventEmitter
       return cb null, json
 
   run: (cb) ->
+    cb = _.bind cb, @
 
     if @opts.all
       entries = []
