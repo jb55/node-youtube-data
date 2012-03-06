@@ -113,7 +113,7 @@ class Query extends EventEmitter
       try
         json = JSON.parse body
       catch e
-        return cb(e)
+        return cb e, body
 
       if simple and type is 'videos'
         json.feed.entry = _.map json.feed.entry, fmt.video.entry.simple
@@ -133,7 +133,7 @@ class Query extends EventEmitter
 
       go = (opts) =>
         Query.doRequest opts, (err, data) =>
-          return cb err if err
+          return cb err, data if err
           @emit 'result', data
 
           numEntries = data.feed.entry.length
