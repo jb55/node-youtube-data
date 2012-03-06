@@ -64,6 +64,16 @@ class Query extends EventEmitter
     @opts.id = user
     @
 
+  responses: (id) ->
+    @type("videos")
+    @opts.id = "#{ id }/responses"
+    @
+
+  comments: (id) ->
+    @type("videos")
+    @opts.id = "#{ id }/comments"
+    @
+
   videos: (author) ->
     return @opts.author unless author
     @type("videos")
