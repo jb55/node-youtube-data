@@ -8,14 +8,22 @@ class Query extends EventEmitter
   @new = () ->
     return new Query
 
+  optsToQs =
+    results: "max-results"
+    startAt: "start-index"
+
+  qsParams = ["results", "orderby", "author", "startAt"]
+
+  ignoredParams =
+    users: ["results", "author", "orderby", "startAt", "all"]
+
   constructor: (opts={}) ->
-    @qs = opts.qs or {}
     @opts = {}
 
   results: (r) ->
     maxResults = r
     maxResults = 50 if @maxResults > 50
-    @qs["max-results"] = maxResults
+    @opts.results = maxResults
     @
 
   orderByViewCount: () ->
@@ -31,17 +39,7 @@ class Query extends EventEmitter
     @
 
   orderBy: (ordering) ->
-    @qs.orderby = ordering
-    @
-
-  page: (page) ->
-    @opts.page = page
-    @opts.page = 1 if @p
-    @
-
-  pages: (start, end) ->
-    @opts.start = start
-    @opts.end = end
+    @opts.orderby = ordering
     @
 
   all: (all=true) ->
@@ -49,12 +47,12 @@ class Query extends EventEmitter
     @
 
   startAt: (ind) ->
-    @qs["start-index"] = ind
+    @opts.startAt = ind
     @
 
   author: (author) ->
-    return @qs.author unless author
-    @qs.author = author
+    return @opts.author unless author
+    @opts.author = author
     @
 
   type: (type) ->
@@ -67,6 +65,7 @@ class Query extends EventEmitter
     @
 
   videos: (author) ->
+    return @opts.author unless author
     @type("videos")
     @author(author) if author
     @
@@ -75,17 +74,22 @@ class Query extends EventEmitter
     @opts.simple = simple
     @
 
-  @generateQs: (qs_) ->
-    defaultOpts =
+  @generateQs: (opts) ->
+    qs_ =
       alt: 'json'
       v: 2
 
-    _.extend defaultOpts, qs_
+    c = (k) -> optsToQs[k] or k
 
-    return defaultOpts
+    for own k, v of opts
+      continue if k not in qsParams
+      continue if Query.typeIgnoresParam k, opts.type
+      qs_[c k] = v
 
-  @doRequest: (querystring, opts, cb) ->
-    qs_ = qs.stringify Query.generateQs(querystring)
+    qs_
+
+  @doRequest: (opts, cb) ->
+    qs_ = qs.stringify Query.generateQs(opts)
     { type, simple } = opts
 
     unless type
@@ -106,16 +110,19 @@ class Query extends EventEmitter
 
       return cb null, json
 
+  @typeIgnoresParam: (p, type) -> p in (ignoredParams[type] or [])
+  ignoresParam: (p) -> Query.typeIgnoresParam p, @opts.type
+
   run: (cb) ->
     cb = _.bind cb, @
 
-    if @opts.all
+    if @opts.all and not @ignoresParam 'all'
       entries = []
-      maxLen = @qs["max-length"] = @qs["max-length"] or 50
-      startAt = @qs["start-index"] = @qs["start-index"] or 1
+      maxLen = @opts.results = @opts.results or 50
+      startAt = @opts.startAt = @opts.startAt or 1
 
-      go = (qs_) =>
-        Query.doRequest qs_, @opts, (err, data) =>
+      go = (opts) =>
+        Query.doRequest opts, (err, data) =>
           return cb err if err
           @emit 'result', data
 
@@ -130,12 +137,12 @@ class Query extends EventEmitter
             data.feed.entry = entries
             return cb null, data
           else
-            qs_["start-index"] = startAt += maxLen
-            go qs_
+            opts.startAt = startAt += maxLen
+            go opts
 
-      go @qs
+      go @opts
     else
-      Query.doRequest @qs, @opts, cb
+      Query.doRequest @opts, cb
 
     @
 
