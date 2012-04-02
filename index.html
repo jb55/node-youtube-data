@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>node-youtube-data by jb55</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>node-youtube-data</h1>
+        <p>Query Youtube data</p>
+        <p class="view"><a href="https://github.com/jb55/node-youtube-data">View the Project on GitHub <small>jb55/node-youtube-data</small></a></p>
+        <ul>
+          <li><a href="https://github.com/jb55/node-youtube-data/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/jb55/node-youtube-data/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/jb55/node-youtube-data">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>node-youtube-data</h1>
+
+<p>Get data from YouTube as JSON</p>
+
+<h2>Examples</h2>
+
+<div class="highlight">
+<pre><span class="nv">yt = </span><span class="nx">require</span><span class="p">(</span><span class="s">'youtube-data'</span><span class="p">)</span>
+
+<span class="nx">yt</span><span class="p">.</span><span class="nx">query</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">videos</span><span class="p">(</span><span class="s">'monstercatmedia'</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">results</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+  <span class="p">.</span><span class="nx">orderByPublished</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">simple</span><span class="p">()</span>
+  <span class="p">.</span><span class="nx">run</span> <span class="nf">(err, data) -&gt;</span>
+    <span class="k">return</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">err</span> <span class="k">if</span> <span class="nx">err</span>
+
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span> <span class="nx">data</span><span class="p">.</span><span class="nx">feed</span><span class="p">.</span><span class="nx">entry</span>
+</pre>
+</div>
+
+
+<h2>Work in progress</h2>
+
+<p>I have only implemented the bare minimum, the api will expand with time and pull
+requests ;)</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/jb55">jb55</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
+</html>
