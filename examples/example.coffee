@@ -1,4 +1,4 @@
-yt = require('./lib/index')
+yt = require('../lib/index')
 _ = require('underscore')._
 
 accumEntry = (e1, e2) ->
