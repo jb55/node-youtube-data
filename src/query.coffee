@@ -11,6 +11,7 @@ class Query extends EventEmitter
   optsToQs =
     results: "max-results"
     startAt: "start-index"
+    categories: "category"
 
   qsParams = ["results", "orderby", "author", "startAt"]
 
@@ -40,6 +41,14 @@ class Query extends EventEmitter
 
   orderBy: (ordering) ->
     @opts.orderby = ordering
+    @
+
+  category: (category) ->
+    @opts.category = category
+    @
+
+  categories: (categories) ->
+    @opts.categories = categories.join(" ")
     @
 
   all: (all=true) ->
