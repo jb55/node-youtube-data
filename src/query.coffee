@@ -75,7 +75,6 @@ class Query extends EventEmitter
     @
 
   videos: (author) ->
-    return @opts.author unless author
     @type("videos")
     @author(author) if author
     @
