@@ -8,8 +8,10 @@ Examples
 
 ```js
 var yt = require('youtube-data')
+var token = process.env.OAUTH_TOKEN
 
 yt.query()
+  .auth(token)
   .videos('monstercatmedia')
   .results(50)
   .orderByPublished()
