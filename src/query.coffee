@@ -1,7 +1,9 @@
-qs               = require 'querystring'
-{ _ }            = require('underscore')
-request          = require 'request'
-fmt              = require './formatting'
+qs      = require('querystring')
+{ _ }   = require('underscore')
+request = require('request')
+fmt     = require('./formatting')
+async   = require('async')
+
 { EventEmitter } = require 'events'
 
 class Query extends EventEmitter
