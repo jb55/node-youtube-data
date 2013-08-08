@@ -15,9 +15,9 @@ class Query extends EventEmitter
     startAt: "start-index"
     categories: "category"
 
-  qsParams = ["results", "orderby", "author", "startAt"]
+  qsParams = ["results", "orderby", "author", "startAt", "category"]
 
-  ignoredParams =
+  typeParams =
     users: ["results", "author", "orderby", "startAt", "all"]
 
   constructor: (opts={}) ->
@@ -46,11 +46,8 @@ class Query extends EventEmitter
     @
 
   category: (category) ->
+    category = category.join " " if _.isArray(category)
     @opts.category = category
-    @
-
-  categories: (categories) ->
-    @opts.categories = categories.join(" ")
     @
 
   all: (all=true) ->
@@ -80,6 +77,10 @@ class Query extends EventEmitter
     @opts.id = "#{ id }/responses"
     @
 
+  channels: (id) ->
+    @type("channels")
+    @
+
   comments: (id) ->
     @type("videos")
     @opts.id = "#{ id }/comments"
@@ -93,6 +94,14 @@ class Query extends EventEmitter
   simple: (simple=true) ->
     @opts.simple = simple
     @
+
+  url: -> Query.url @opts
+
+  @url: (opts) ->
+    { type } = opts
+    qs_ = qs.stringify Query.generateQs(opts)
+    id = if opts.id then "/#{ opts.id }" else ""
+    url = "http://gdata.youtube.com/feeds/api/#{ type }#{ id }?#{ qs_ }"
 
   @generateQs: (opts) ->
     qs_ =
@@ -109,14 +118,12 @@ class Query extends EventEmitter
     qs_
 
   @doRequest: (opts, cb) ->
-    qs_ = qs.stringify Query.generateQs(opts)
     { type, simple } = opts
 
     unless type
       return cb "Query type not selected. eg. query.videos('author')"
 
-    id = if opts.id then "/#{ opts.id }" else ""
-    url = "http://gdata.youtube.com/feeds/api/#{ type }#{ id }?#{ qs_ }"
+    url = Query.url opts
 
     request url, (err, res, body) ->
       return cb err if err
