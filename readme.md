@@ -6,18 +6,18 @@ Get data from YouTube as JSON
 Examples
 --------
 
-```coffeescript
-yt = require('youtube-data')
+```js
+var yt = require('youtube-data')
 
 yt.query()
   .videos('monstercatmedia')
   .results(50)
   .orderByPublished()
   .simple()
-  .run (err, data) ->
-    return console.log err if err
-
-    console.log data.feed.entry
+  .run(function(err, data){
+    if (err) console.log(err)
+    console.log(data.feed.entry)
+  })
 ```
 
 Work in progress
