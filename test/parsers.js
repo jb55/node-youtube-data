@@ -10,11 +10,14 @@ test(function (t) {
   var maxPerReq = 50;
   var requests = 0;
 
-  yt.query()
-    .videos('monstercatmedia')
-    .results(expectedEntries + 2)
-    .orderByPublished()
-    .run(go);
+  var query =
+    yt.query()
+      .videos('monstercatmedia')
+      .results(expectedEntries + 2)
+      .orderByPublished()
+      .run(go);
+
+  query.on('result', function() { requests++; });
 
   function go(err, data) {
     t.notOk(err, "no error");
