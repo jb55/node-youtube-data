@@ -1,7 +1,9 @@
 node-youtube-data
 =================
 
-Get data from YouTube as JSON
+Get data from YouTube
+
+[![build status](https://secure.travis-ci.org/jb55/node-youtube-data.png)](http://travis-ci.org/jb55/node-youtube-data)
 
 Examples
 --------
