@@ -1,19 +1,17 @@
-node-youtube-data
-=================
+# node-youtube-data
 
 Get data from YouTube
 
 [![build status](https://secure.travis-ci.org/jb55/node-youtube-data.png)](http://travis-ci.org/jb55/node-youtube-data)
 
-Examples
---------
+## Examples
 
 ```js
 var yt = require('youtube-data')
 var token = process.env.OAUTH_TOKEN
 
 yt.query()
-  .auth(token)
+  .oauth(token)
   .videos('monstercatmedia')
   .results(50)
   .orderByPublished()
@@ -24,8 +22,19 @@ yt.query()
   })
 ```
 
-Work in progress
-----------------
+## Methods
+
+### .oauth(token)
+
+Authenticate a request with an oauth access token.
+
+Adds `Authentication: Bearer {token}` to request headers
+
+### ...
+
+More documentation to follow
+
+## Work in progress
 
 I have only implemented the bare minimum, the api will expand with time and pull
 requests ;)
