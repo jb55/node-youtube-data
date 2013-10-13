@@ -11,7 +11,7 @@ test(function (t) {
   var requests = 0;
 
   var query =
-    yt.query()
+    yt.data()
       .videos('monstercatmedia')
       .results(expectedEntries + 2)
       .orderByPublished()
